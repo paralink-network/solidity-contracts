@@ -1,3 +1,5 @@
+![](https://paralink.network/images/logo-sm-home.png)
+
 # Paralink Solidity Contracts
 
 ## Set up local environment
@@ -92,7 +94,7 @@ If not already, set `WEB3_INFURA_PROJECT_ID` in `.env`.
 ### Deploy the token
 
 ```
-pipenv run brownie run deploy/0_para_token.py --network mainnet
+pipenv run brownie run deploy/0_token.py --network mainnet
 ```
 
 ## Generate the Etherscan Contract Verification codes

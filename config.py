@@ -6,7 +6,9 @@ class Config:
 
 class MainnetConfig(Config):
     # Deployments
-    PARA_TOKEN = ""
+    PARA_TOKEN   = ""
+    PARA_FARMING = ""
+    PARA_STAKING = ""
     TIMELOCK = ""
     GOVERNOR = ""
 
