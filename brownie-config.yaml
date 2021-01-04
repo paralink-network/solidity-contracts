@@ -10,7 +10,7 @@ project_structure:
   tests: tests
 
 networks:
-  default: mainnet-fork
+  default: development
   development:
     gas_limit: max
     gas_price: auto
