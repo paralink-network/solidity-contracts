@@ -1,12 +1,13 @@
 class Config:
     NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
-    GAS_MULTIPLIER = 1.3  # avoid stuck tx's due to median gas variance
-    DEPLOYER = "paralink_deployer"  # brownie account id
+    GAS_MULTIPLIER = 1.5  # avoid stuck tx's due to median gas variance
+    DEPLOYER_ETH = "paralink_deployer_eth"  # brownie account id
+    DEPLOYER_BSC = "paralink_deployer_bsc"  # brownie account id
 
 
 class MainnetConfig(Config):
     # Deployments
-    PARA_TOKEN   = ""
+    PARA_TOKEN   = "0x3a8d5BC8A8948b68DfC0Ce9C14aC4150e083518c"
     PARA_FARMING = ""
     PARA_STAKING = ""
     TIMELOCK = ""
