@@ -23,7 +23,9 @@ def ipfs_bytes32():
 
 
 def test_successful_callback(oracle, user, ipfs_bytes32):
-    tx = user.initiateRequest(ipfs_bytes32, 0, {"from": accounts[1]})
+    tx = user.initiateRequest(
+        ipfs_bytes32, 0, {"from": accounts[1], "value": Wei("0.01 ether")}
+    )
 
     assert len(tx.events) == 1
     request_event = tx.events["Request"][0]
@@ -34,6 +36,7 @@ def test_successful_callback(oracle, user, ipfs_bytes32):
     # Oracle fullfills the request
     fultx = oracle.fulfillRequest(
         request_event["requestId"],
+        request_event["fee"],
         request_event["callbackAddress"],
         request_event["callbackFunctionId"],
         request_event["expiration"],
@@ -46,13 +49,27 @@ def test_successful_callback(oracle, user, ipfs_bytes32):
     assert user.someData() == hex(123456)
 
 
+def test_subsequent_init_requests_with_same_nonce(oracle, user, ipfs_bytes32):
+    user.initiateRequest(
+        ipfs_bytes32, 0, {"from": accounts[1], "value": Wei("0.01 ether")}
+    )
+
+    with brownie.reverts("Must use a unique ID"):
+        user.initiateRequest(
+            ipfs_bytes32, 0, {"from": accounts[1], "value": Wei("0.01 ether")}
+        )
+
+
 def test_double_fulfill_fail(oracle, user, ipfs_bytes32):
-    tx = user.initiateRequest(ipfs_bytes32, 0, {"from": accounts[1]})
+    tx = user.initiateRequest(
+        ipfs_bytes32, 0, {"from": accounts[1], "value": Wei("0.01 ether")}
+    )
 
     request_event = tx.events["Request"][0]
 
     fultx = oracle.fulfillRequest(
         request_event["requestId"],
+        request_event["fee"],
         request_event["callbackAddress"],
         request_event["callbackFunctionId"],
         request_event["expiration"],
@@ -64,6 +81,7 @@ def test_double_fulfill_fail(oracle, user, ipfs_bytes32):
     with brownie.reverts("Must have a valid requestId"):
         fultx = oracle.fulfillRequest(
             request_event["requestId"],
+            request_event["fee"],
             request_event["callbackAddress"],
             request_event["callbackFunctionId"],
             request_event["expiration"],
