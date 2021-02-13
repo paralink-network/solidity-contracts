@@ -9,6 +9,7 @@ contract ParalinkOracle is Ownable {
     using Address for address;
 
     uint256 public constant EXPIRY_TIME = 5 minutes;
+    uint256 private constant MINIMUM_CALLBACK_GAS_LIMIT = 400_000;
 
     mapping(address => bool) private authorizedNodes;
     mapping(bytes32 => bytes32) private commitments;
@@ -113,6 +114,10 @@ contract ParalinkOracle is Ownable {
         withdrawableBalance = withdrawableBalance.add(_fee);
         delete commitments[_requestId];
 
+        require(
+            gasleft() >= MINIMUM_CALLBACK_GAS_LIMIT,
+            "Must provide enough callback gas"
+        );
         (bool success, ) = _callbackAddress.call(
             abi.encodePacked(_callbackFunctionId, _data)
         );
