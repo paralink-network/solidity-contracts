@@ -1,30 +1,21 @@
 import base58
 
 from brownie import *
-from config import BinanceTestnet
+from config import Config
 
-c = BinanceTestnet()
-
-
-def get_deployer_account():
-    if network.show_active().startswith("binance"):
-        return accounts.load(c.DEPLOYER_BSC)
-    else:
-        return accounts.load(c.DEPLOYER_ETH)
+c = Config.get()
+deployer_acc = c.get_deployer_account()
 
 
 def deploy():
     assert c.PARA_ORACLE != "", "You must first deploy the oracle."
     assert c.PARA_ORACLE_USER == "", "Oracle user already deployed."
 
-    deployer_acc = get_deployer_account()
-
     oracle_user = OracleUserExample.deploy(c.PARA_ORACLE, {"from": deployer_acc})
 
 
 def request():
     assert c.PARA_ORACLE_USER != "", "You must first deploy the oracle user."
-    deployer_acc = get_deployer_account()
 
     # Get IPFS hash
     ipfs_hash = "QmTUFeBdxkGJsvFeTthwrYNwfkNWkE4e5P5f8goPdLoLGc"

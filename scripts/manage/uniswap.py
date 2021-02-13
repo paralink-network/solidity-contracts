@@ -1,21 +1,22 @@
 from brownie import *
-from config import *
+from config import Config
 import time
 
-c = MainnetConfig()
+c = Config.get()
 
-deployer_acc = accounts.load(c.DEPLOYER)
+deployer_acc = c.get_deployer_account()
 para = ParaToken.at(c.PARA_TOKEN)
 factory = Contract.from_explorer(c.UNISWAP_V2_FACTORY)
 router = Contract.from_explorer(c.UNISWAP_V2_ROUTER)
 
-def get_opts(from_ = deployer_acc) -> dict:
-    return {"from": from_,
-            "gas_price": int(web3.eth.gasPrice*1.3)}
+
+def get_opts(from_=deployer_acc) -> dict:
+    return {"from": from_, "gas_price": int(web3.eth.gasPrice * 1.3)}
+
 
 # test pairs
-eth_pair  = ''
-usdt_pair = ''
+eth_pair = ""
+usdt_pair = ""
 
 # send test tokens to the team
 # para.mint('', Wei('10000 ether'), get_opts())
@@ -23,14 +24,14 @@ usdt_pair = ''
 
 def init_uniswap_pool(tokenA: str, tokenB: str) -> str:
     tx = factory.createPair(tokenA, tokenB, get_opts())
-    pair_addr = tx._events['PairCreated']['pair']
+    pair_addr = tx._events["PairCreated"]["pair"]
     return pair_addr
 
 
 def main():
     para_usd = 0.0000
-    btc_usd  = 13522.6
-    eth_usd  = 390.1
+    btc_usd = 13522.6
+    eth_usd = 390.1
     usdt_usd = 1
 
     #
@@ -38,11 +39,11 @@ def main():
     #
     pool_amount = 100  # total USD liquidity
     para_amount = (pool_amount / 2) / para_usd
-    eth_amount  = (pool_amount / 2) / eth_usd
+    eth_amount = (pool_amount / 2) / eth_usd
     print(pool_amount, para_amount, eth_amount)
 
     # prepare PARA token
-    para_amount_wei = Wei(f'{para_amount} ether')
+    para_amount_wei = Wei(f"{para_amount} ether")
     para.mint(deployer_acc.address, para_amount_wei, get_opts())
     para.approve(router.address, 0, get_opts())
     para.approve(router.address, para_amount_wei, get_opts())
@@ -50,7 +51,7 @@ def main():
     # prepare WETH (manually, since solidity version is too old)
     # weth = Contract.from_explorer(c.WETH_TOKEN)
     # or just use addLiquidityETH
-    eth_amount_wei = Wei(f'{eth_amount} ether')
+    eth_amount_wei = Wei(f"{eth_amount} ether")
     deadline = int(time.time()) + 3600
     router.addLiquidityETH(
         c.PARA_TOKEN,
@@ -59,7 +60,7 @@ def main():
         eth_amount_wei,
         deployer_acc.address,
         deadline,
-        {**get_opts(), 'amount': eth_amount_wei}
+        {**get_opts(), "amount": eth_amount_wei},
     )
 
     #
@@ -71,7 +72,7 @@ def main():
     print(pool_amount, para_amount, usdt_amount)
 
     # prepare PARA token
-    para_amount_wei = Wei(f'{para_amount} ether')
+    para_amount_wei = Wei(f"{para_amount} ether")
     para.mint(deployer_acc.address, para_amount_wei, get_opts())
     para.approve(router.address, 0, get_opts())
     para.approve(router.address, para_amount_wei, get_opts())
@@ -79,7 +80,7 @@ def main():
     # prepare USDT (manually, old solidity)
 
     # add liquidity
-    usdt_amount_wei = Wei(f'{usdt_amount} ether')
+    usdt_amount_wei = Wei(f"{usdt_amount} ether")
     deadline = int(time.time()) + 3600
     router.addLiquidity(
         c.PARA_TOKEN,
@@ -90,9 +91,8 @@ def main():
         usdt_amount_wei,
         deployer_acc.address,
         deadline,
-        get_opts()
+        get_opts(),
     )
-
 
     # pair_addr = init_uniswap_pool(c.PARA_TOKEN, c.WBTC_TOKEN)
     # pair_addr = init_uniswap_pool(c.PARA_TOKEN, c.USDT_TOKEN)

@@ -1,16 +1,13 @@
 from brownie import *
 
-from config import BinanceTestnet
+from config import Config
 
-c = BinanceTestnet()
+c = Config.get()
 
 
 def main():
     assert c.PARA_ORACLE == "", "Oracle already deployed."
-    if network.show_active().startswith("binance"):
-        deployer_acc = accounts.load(c.DEPLOYER_BSC)
-    else:
-        deployer_acc = accounts.load(c.DEPLOYER_ETH)
+    deployer_acc = c.get_deployer_account()
 
     publish_source = True
     oracle = ParalinkOracle.deploy(
