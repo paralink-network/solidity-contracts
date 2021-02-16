@@ -24,7 +24,7 @@ def request():
     ipfs_hash = "QmTUFeBdxkGJsvFeTthwrYNwfkNWkE4e5P5f8goPdLoLGc"
     ipfs_bytes32 = base58.b58decode(ipfs_hash)[2:]
 
-    nonce = 13
+    nonce = 1
     oracle_user = OracleUserExample.at(c.PARA_ORACLE_USER)
 
     tx = oracle_user.initiateRequest(

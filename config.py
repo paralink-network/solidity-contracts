@@ -57,8 +57,8 @@ class BinanceMainnet(Config):
 
 
 class BinanceTestnet(Config):
-    PARA_ORACLE = "0xf1DBf560bB5a2b0150DBaF3Fc351Be969A2CD7b0"
-    PARA_ORACLE_USER = "0xe4A49adA9e491174ed86Fc8157fc5735531F5CCB"
+    PARA_ORACLE = "0x0abdf4D7258b557117aC603295b1269DcaF161c1"
+    PARA_ORACLE_USER = "0xFd45Bbe4009Da0f663226d856378c91B14a6a148"
 
     def get_deployer_account(self):
         return accounts.load(self.DEPLOYER_BSC)
