@@ -71,6 +71,7 @@ contract ParalinkOracle is Ownable {
 
     function cancelRequest(
         uint256 _fee,
+        address _sender,
         bytes32 _requestId,
         bytes4 _callbackFunc,
         uint256 _expiration
@@ -87,7 +88,7 @@ contract ParalinkOracle is Ownable {
         delete commitments[_requestId];
         emit RequestCanceled(_requestId);
 
-        msg.sender.transfer(_fee);
+        payable(_sender).transfer(_fee);
     }
 
     function fulfillRequest(

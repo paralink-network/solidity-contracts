@@ -46,19 +46,12 @@ contract OracleUserExample is Ownable {
         someData = _data;
     }
 
-    function cancelRequest(uint256 _fee, uint256 _expiration) public onlyOwner {
+    function cancelRequest(uint256 _nonce, uint256 _fee, uint256 _expiration) public onlyOwner {
         bytes4 callbackFunctionId = bytes4(
             keccak256("callbackFunction(bytes32)")
         );
-        bytes32 requestId = keccak256(
-            abi.encodePacked(
-                _fee,
-                address(this),
-                callbackFunctionId,
-                _expiration
-            )
-        );
+        bytes32 requestId = keccak256(abi.encodePacked(msg.sender, _nonce));
 
-        oracle.cancelRequest(_fee, requestId, callbackFunctionId, _expiration);
+        oracle.cancelRequest(_fee, msg.sender, requestId, callbackFunctionId, _expiration);
     }
 }
