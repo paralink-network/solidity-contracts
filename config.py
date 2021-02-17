@@ -45,6 +45,7 @@ class EthereumMainnet(Config):
     UNISWAP_V2_ROUTER = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"
 
     def get_deployer_account(self):
+        print(f"Loading account {color('bright magenta')}{self.DEPLOYER_ETH}{color}.")
         return accounts.load(self.DEPLOYER_ETH)
 
 
@@ -53,6 +54,7 @@ class BinanceMainnet(Config):
     PARA_ORACLE_USER = "0xe4A49adA9e491174ed86Fc8157fc5735531F5CCB"
 
     def get_deployer_account(self):
+        print(f"Loading account {color('bright magenta')}{self.DEPLOYER_BSC}{color}.")
         return accounts.load(self.DEPLOYER_BSC)
 
 
@@ -61,4 +63,5 @@ class BinanceTestnet(Config):
     PARA_ORACLE_USER = "0xFd45Bbe4009Da0f663226d856378c91B14a6a148"
 
     def get_deployer_account(self):
+        print(f"Loading account {color('bright magenta')}{self.DEPLOYER_BSC}{color}.")
         return accounts.load(self.DEPLOYER_BSC)
