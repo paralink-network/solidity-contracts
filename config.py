@@ -49,8 +49,8 @@ class EthereumMainnet(Config):
 
 
 class BinanceMainnet(Config):
-    PARA_ORACLE = ""
-    PARA_ORACLE_USER = ""
+    PARA_ORACLE = "0xf1DBf560bB5a2b0150DBaF3Fc351Be969A2CD7b0"
+    PARA_ORACLE_USER = "0xe4A49adA9e491174ed86Fc8157fc5735531F5CCB"
 
     def get_deployer_account(self):
         return accounts.load(self.DEPLOYER_BSC)
