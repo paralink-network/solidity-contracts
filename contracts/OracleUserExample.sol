@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -20,13 +21,15 @@ contract OracleUserExample is Ownable {
 
     function initiateRequest(bytes32 _ipfsHash, uint256 _nonce)
         public
+        payable
         onlyOwner
     {
         bytes4 callbackFunctionId = bytes4(
             keccak256("callbackFunction(bytes32)")
         );
-        oracle.request(
+        oracle.request{value: msg.value}(
             _ipfsHash,
+            msg.value,
             msg.sender,
             address(this),
             callbackFunctionId,
@@ -42,5 +45,14 @@ contract OracleUserExample is Ownable {
         );
 
         someData = _data;
+    }
+
+    function cancelRequest(uint256 _nonce, uint256 _fee, uint256 _expiration) public onlyOwner {
+        bytes4 callbackFunctionId = bytes4(
+            keccak256("callbackFunction(bytes32)")
+        );
+        bytes32 requestId = keccak256(abi.encodePacked(msg.sender, _nonce));
+
+        oracle.cancelRequest(_fee, msg.sender, requestId, callbackFunctionId, _expiration);
     }
 }

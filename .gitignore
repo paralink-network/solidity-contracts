@@ -3,6 +3,7 @@ __pycache__
 .hypothesis/
 build/
 reports/
+scripts/dev
 .env
 node_modules
 etherscan.sol

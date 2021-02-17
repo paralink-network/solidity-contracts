@@ -1,13 +1,41 @@
+from brownie import *
+from brownie.utils import color
+
+
 class Config:
     NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
     GAS_MULTIPLIER = 1.5  # avoid stuck tx's due to median gas variance
     DEPLOYER_ETH = "paralink_deployer_eth"  # brownie account id
     DEPLOYER_BSC = "paralink_deployer_bsc"  # brownie account id
 
+    @staticmethod
+    def get(name=network.show_active()):
+        cls = None
 
-class MainnetConfig(Config):
+        if name.startswith("binance"):
+            if "mainnet" in name:
+                cls = BinanceMainnet()
+            elif "testnet" in name:
+                cls = BinanceTestnet()
+            else:
+                raise ValueError(f"Network name '{name}' is not recognized.")
+        elif name == "mainnet":
+            cls = EthereumMainnet()
+        else:
+            raise ValueError(
+                f"Network name '{color('bright magenta')}{name}{color}' is not recognized."
+            )
+
+        print(
+            f"Using network config {color('bright magenta')}{type(cls).__name__}{color}, active network: {color('green')}{network.show_active()}{color}."
+        )
+
+        return cls
+
+
+class EthereumMainnet(Config):
     # Deployments
-    PARA_TOKEN   = "0x3a8d5BC8A8948b68DfC0Ce9C14aC4150e083518c"
+    PARA_TOKEN = "0x3a8d5BC8A8948b68DfC0Ce9C14aC4150e083518c"
     PARA_FARMING = ""
     PARA_STAKING = ""
     TIMELOCK = ""
@@ -16,3 +44,21 @@ class MainnetConfig(Config):
     UNISWAP_V2_FACTORY = "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f"
     UNISWAP_V2_ROUTER = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"
 
+    def get_deployer_account(self):
+        return accounts.load(self.DEPLOYER_ETH)
+
+
+class BinanceMainnet(Config):
+    PARA_ORACLE = ""
+    PARA_ORACLE_USER = ""
+
+    def get_deployer_account(self):
+        return accounts.load(self.DEPLOYER_BSC)
+
+
+class BinanceTestnet(Config):
+    PARA_ORACLE = "0x0abdf4D7258b557117aC603295b1269DcaF161c1"
+    PARA_ORACLE_USER = "0xFd45Bbe4009Da0f663226d856378c91B14a6a148"
+
+    def get_deployer_account(self):
+        return accounts.load(self.DEPLOYER_BSC)
