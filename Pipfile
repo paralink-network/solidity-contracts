@@ -10,7 +10,7 @@ flake8 = "*"
 pandas = "*"
 numpy = "*"
 ipython = "*"
-eth-brownie = "*"
+eth-brownie = {ref = "jg_bsc_publish", git = "https://github.com/jbargu/brownie.git"}
 
 [requires]
 python_version = "3.8"
