@@ -14,6 +14,7 @@ def deploy():
     oracle_user = OracleUserExample.deploy(
         c.PARA_ORACLE,
         {"from": deployer_acc, "gas_price": int(web3.eth.gasPrice * c.GAS_MULTIPLIER)},
+        publish_source=True,
     )
 
 
@@ -24,7 +25,7 @@ def request():
     ipfs_hash = "QmTUFeBdxkGJsvFeTthwrYNwfkNWkE4e5P5f8goPdLoLGc"
     ipfs_bytes32 = base58.b58decode(ipfs_hash)[2:]
 
-    nonce = 1
+    nonce = 0
     oracle_user = OracleUserExample.at(c.PARA_ORACLE_USER)
 
     tx = oracle_user.initiateRequest(
