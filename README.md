@@ -55,6 +55,12 @@ To add support for Binance Smart Chain, run:
 pipenv run brownie networks add "Ethereum" "binance-mainnet" host="https://bsc-dataseed1.defibit.io/" chainid=56
 ```
 
+Add support for bscscan:
+```
+pipenv run brownie networks modify binance-mainnet explorer=https://api.bscscan.com/api
+```
+
+
 ## Compile contracts
 
 Trigger manual re-compile:
